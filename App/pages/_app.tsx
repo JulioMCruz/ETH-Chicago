@@ -61,12 +61,6 @@ const particleWallets = [
   particleWallet({ chains }),
 ];
 
-// const { connectors } = getDefaultWallets({
-//   appName: 'RainbowKit App',
-//   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || "",
-//   chains,
-// });
-
 const popularWallets = {
   groupName: 'Popular',
   wallets: [
