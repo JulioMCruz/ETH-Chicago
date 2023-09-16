@@ -4,8 +4,19 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 
 import { Button } from "../components/ui/button";
+import { useAccount } from "wagmi";
+import { useState, useEffect } from 'react'
+
 
 const Home: NextPage = () => {
+
+  const { isConnected, address } = useAccount();
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -18,11 +29,14 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <ConnectButton />
-        
         <div className="mt-8">
           <Button>Click me</Button>
         </div>
+        {(isClient && isConnected) && (
+          <>
+          <p className="text-white">Address:  {address}</p>
+          </>
+        )}
 
       </main>
 
