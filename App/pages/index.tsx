@@ -3,6 +3,8 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 
+import { Button } from "../components/ui/button";
+
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
@@ -18,6 +20,10 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <ConnectButton />
         
+        <div className="mt-8">
+          <Button>Click me</Button>
+        </div>
+
       </main>
 
     </div>
