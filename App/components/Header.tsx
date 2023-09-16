@@ -86,9 +86,8 @@ const Header = () => {
             </Button>
             <ConnectButton />
 
-            {/* <Passport /> */}
             {(isClient && isConnected) && (
-              <Passport />
+              <></>
             )}
 
 
