@@ -30,6 +30,10 @@ import { publicProvider } from 'wagmi/providers/public';
 import { ParticleNetwork } from '@particle-network/auth';
 import { particleWallet } from '@particle-network/rainbowkit-ext';
 
+import { ThemeProvider } from "next-themes";
+import Header from "../components/Header";
+
+
 new ParticleNetwork({
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID as string,
   clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY as string,
@@ -100,7 +104,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains}>
-        <Component {...pageProps} />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Header />
+          <Component {...pageProps} />        
+        </ThemeProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );
