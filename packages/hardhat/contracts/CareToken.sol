@@ -10,31 +10,59 @@ interface IAPI3Oracle {
 }
 
 contract CareToken is ERC20, Ownable {
-   address public api3Oracle;
+    address public api3ETHUSD;
+    address public api3MXNUSD;
+    address public api3AUDUSD;
+    address public api3INRUSD;
 
-
-    constructor(address _api3Oracle) ERC20("Care", "CARE") {
-        api3Oracle = _api3Oracle;
-
+    enum Currency {
+        ETH, //0
+        MXN, //1
+        AUD, //2
+        INR  //3
     }
 
-    function setPricefeed(address _feed) external onlyOwner{
-        api3Oracle = _feed;
+    mapping(Currency => address) public priceFeeds;
+
+    event RequestedTokens(uint256 usdAmount, uint256 currentCurrencyPrice, uint256 careTokenAmount, address recipient);
+
+    constructor(
+        address _api3ETHUSD,
+        address _api3MXNUSD,
+        address _api3AUDUSD,
+        address _api3INRUSD
+    ) ERC20("Care", "CARE") {
+        priceFeeds[Currency.ETH] = _api3ETHUSD;
+        priceFeeds[Currency.MXN] = _api3MXNUSD;
+        priceFeeds[Currency.AUD] = _api3AUDUSD;
+        priceFeeds[Currency.INR] = _api3INRUSD;
     }
 
-    function mint() external onlyOwner{
-        (uint256 currentEthPrice, uint256 timestamp) = readDataFeed();
-    uint256 desiredETHValue = 10000000000000000000000 * 10**18 / currentEthPrice; // This will give you the equivalent ETH value for $10,000
-    uint256 amountToMint = desiredETHValue; // Since 1 token represents 1 ETH in your design
-    _mint(msg.sender, amountToMint);
-    }
-
-     function readDataFeed() public view returns (uint256, uint256) {
-        (int224 value, uint256 timestamp) = IProxy(api3Oracle).read();
-        //convert price to UINT256
-        uint256 price = uint224(value);
-        return (price, timestamp);
+    function mint() external onlyOwner {
+    uint256 currentEthPrice = readDataFeed(Currency.ETH);
+    uint256 desiredETHValue = 10000000000000000000000 * 10**18 / currentEthPrice;
+    _mint(address(this), desiredETHValue);
     }
 
 
+    function readDataFeed(Currency currency) public view returns (uint256) {
+        (int224 value, ) = IProxy(priceFeeds[currency]).read();
+        return uint224(value);
+    }
+
+    function requestTokens(uint256 amountInNativeCurrency, Currency currency, address recipient) external {
+        require(amountInNativeCurrency > 0, "Requested amount should be greater than zero");
+        uint256 conversionRateToUSD = readDataFeed(currency); // This gives the conversion rate from the native currency to USD.
+        require(conversionRateToUSD > 0, "Currency price is zero");
+        // Convert the amount in the native currency to its USD equivalent.
+        uint256 usdEquivalent = (amountInNativeCurrency * conversionRateToUSD + 10**18 - 1) / 10**18;
+        uint256 ethPriceInUSD = readDataFeed(Currency.ETH);
+        require(ethPriceInUSD > 0, "ETH price is zero");
+        // Convert the USD equivalent to CARE token amount.
+        uint256 careTokenAmount = (usdEquivalent * 10**18 + ethPriceInUSD - 1) / ethPriceInUSD;
+        require(careTokenAmount > 0, "Calculated CARE token amount is zero");
+        require(balanceOf(address(this)) >= careTokenAmount, "Not enough CARE tokens in the treasury");
+        _transfer(address(this), recipient, careTokenAmount);
+        emit RequestedTokens(amountInNativeCurrency, conversionRateToUSD, careTokenAmount, recipient);
+    }
 }
