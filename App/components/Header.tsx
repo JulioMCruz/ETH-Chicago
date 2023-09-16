@@ -14,7 +14,7 @@ import { useState, useEffect } from 'react'
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const [isClient, setIsClient] = useState(false)
 
   const routes = [
