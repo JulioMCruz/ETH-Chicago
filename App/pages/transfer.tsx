@@ -8,7 +8,6 @@ import styles from '../styles/Home.module.css';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import { Button } from "../components/ui/button";
-import { useAccount } from "wagmi";
 import { useState, useEffect } from 'react'
 
 import LoadFiat from '../components/LoadFiat';
@@ -26,6 +25,24 @@ import {
   CardHeader,
   CardTitle,
 } from "../components/ui/card"
+
+import {
+  useAccount,
+  useConnect,
+  useContractRead,
+  useContractWrite,
+  useNetwork,
+  useWaitForTransaction,
+} from "wagmi";
+import { ethers } from "ethers";
+import CareTokenABI from "../contracts/CareTokenABI";
+
+const CONTRACT_ADDRESS = "0x1d6032b5e4044d1F870D65f56C067d3D79CbE35d";
+
+const contractConfig = {
+  addressOrName: CONTRACT_ADDRESS,
+  contractInterface: CareTokenABI,
+};
 
 const TrasferList = [
   {
@@ -57,6 +74,13 @@ const Transfers: NextPage = () => {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const { data, isLoading, isSuccess, write } = useContractWrite({
+    address: CONTRACT_ADDRESS,
+    abi: CareTokenABI,
+    functionName: 'deposit',
+    args: [1],
+  })
 
   return (
     <div className={styles.container}>
@@ -153,7 +177,7 @@ const Transfers: NextPage = () => {
                     </span>
                   </CardContent>
                   <CardFooter>
-                    <Button >Fund Request</Button>
+                    <Button disabled={!write} onClick={()=> write?.()}>Fund Request</Button>
                   </CardFooter>
                 </Card>
             ))}
