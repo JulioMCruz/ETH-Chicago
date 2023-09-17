@@ -10,21 +10,18 @@ interface IAPI3Oracle {
 }
 
 contract CareToken is ERC20, Ownable {
-    address public api3ETHUSD;
-    address public api3MXNUSD;
-    address public api3AUDUSD;
-    address public api3INRUSD;
-
-    enum Currency {
-        ETH, //0
-        MXN, //1
-        AUD, //2
-        INR  //3
-    }
-
     mapping(Currency => address) public priceFeeds;
 
-    event RequestedTokens(uint256 usdAmount, uint256 currentCurrencyPrice, uint256 careTokenAmount, address recipient);
+    // A diverse group of assets that the people of Chicago, and others around the world, might need.
+    // Currently supports US Dollar, MXN Peso, Aussie Dollar, and Indian Rupee.
+    enum Currency {
+        USD,
+        MXN,
+        AUD,
+        INR
+    }
+
+    event RequestedTokens(uint256 amountInNativeCurrency, uint256 usdEquivalent, uint256 careTokenAmount, Currency indexed nativeCurrency, address indexed recipient);
 
     constructor(
         address _api3ETHUSD,
@@ -32,37 +29,50 @@ contract CareToken is ERC20, Ownable {
         address _api3AUDUSD,
         address _api3INRUSD
     ) ERC20("Care", "CARE") {
-        priceFeeds[Currency.ETH] = _api3ETHUSD;
+        priceFeeds[Currency.USD] = _api3ETHUSD;
         priceFeeds[Currency.MXN] = _api3MXNUSD;
         priceFeeds[Currency.AUD] = _api3AUDUSD;
         priceFeeds[Currency.INR] = _api3INRUSD;
     }
 
-    function mint() external onlyOwner {
-    uint256 currentEthPrice = readDataFeed(Currency.ETH);
-    uint256 desiredETHValue = 10000000000000000000000 * 10**18 / currentEthPrice;
-    _mint(address(this), desiredETHValue);
+    // Mints the specified amount of tokens to the contract's balance
+    function mint(uint256 usdAmount) external onlyOwner {
+        require(usdAmount > 0, "Amount should be greater than zero.");
+        _mint(address(this), usdAmount * 10**18);
     }
 
+    // Deposits specified amount of tokens into the contract's balance
+    // Real ETH deposits would require access control
+    function deposit(uint256 amount) external {
+        require(amount > 0, "Amount should be greater than zero.");
+        _mint(address(this), amount * 10**18);
+    }
 
-    function readDataFeed(Currency currency) public view returns (uint256) {
+    // Retrieves the current price of the specified currency in USD
+    function getCurrencyPriceInUSD(Currency currency) public view returns (uint256) {
         (int224 value, ) = IProxy(priceFeeds[currency]).read();
         return uint224(value);
     }
 
-    function requestTokens(uint256 amountInNativeCurrency, Currency currency, address recipient) external {
-        require(amountInNativeCurrency > 0, "Requested amount should be greater than zero");
-        uint256 conversionRateToUSD = readDataFeed(currency); // This gives the conversion rate from the native currency to USD.
-        require(conversionRateToUSD > 0, "Currency price is zero");
-        // Convert the amount in the native currency to its USD equivalent.
-        uint256 usdEquivalent = (amountInNativeCurrency * conversionRateToUSD + 10**18 - 1) / 10**18;
-        uint256 ethPriceInUSD = readDataFeed(Currency.ETH);
-        require(ethPriceInUSD > 0, "ETH price is zero");
-        // Convert the USD equivalent to CARE token amount.
-        uint256 careTokenAmount = (usdEquivalent * 10**18 + ethPriceInUSD - 1) / ethPriceInUSD;
-        require(careTokenAmount > 0, "Calculated CARE token amount is zero");
-        require(balanceOf(address(this)) >= careTokenAmount, "Not enough CARE tokens in the treasury");
-        _transfer(address(this), recipient, careTokenAmount);
-        emit RequestedTokens(amountInNativeCurrency, conversionRateToUSD, careTokenAmount, recipient);
+    // Converts the specified amount in a native currency to its USD equivalent and transfers the equivalent amount of CARE to the recipient
+    function requestTokens(uint256 amountInNativeCurrency, Currency nativeCurrency, address recipient) external {
+        require(amountInNativeCurrency > 0, "Requested amount should be greater than zero.");
+        uint256 conversionRateToUSD = getCurrencyPriceInUSD(nativeCurrency);
+        require(conversionRateToUSD > 0, "Currency price is zero or not available.");
+        uint256 intermediateValue = amountInNativeCurrency * conversionRateToUSD;
+        uint256 usdEquivalent = intermediateValue / 1**18;
+        require(usdEquivalent > 0, "USD equivalent amount is zero or too low.");
+        uint256 currentBalance = balanceOf(address(this));
+        require(currentBalance >= usdEquivalent, "Treasury balance is insufficient.");
+        _transfer(address(this), recipient, usdEquivalent * 1**18);
+        emit RequestedTokens(amountInNativeCurrency, usdEquivalent, usdEquivalent * 1**18, nativeCurrency, recipient);
     }
+
+    // Returns the contract's token balance in a human-readable format
+    function contractBalance() public view returns (uint256) {
+        return balanceOf(address(this)) / 10**18 ;
+    }
+
+
+
 }
