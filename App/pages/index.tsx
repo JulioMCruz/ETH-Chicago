@@ -128,7 +128,7 @@ const Home: NextPage = () => {
           <section id="features" className="container space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-12 lg:py-12">
             <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
               <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
-                We Love Help People
+              Permissionlessly help others
               </h2>
               <p className="max-w-[95%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
                 Experience the future of financial empowerment with our cutting-edge application, meticulously designed to bridge borders and bring loved ones closer in an ever-evolving digital age. By integrating the advanced facets of Web 3, such as social login, account abstraction, and token bridges, coupled with the precision of financial oracles, we ensure not just swift, but also accurate monetary transfers. In a world where distances often challenge the heart's desires, our platform stands as a beacon of hope, making financial aid to family and friends not just possible, but profoundly effortless. 
