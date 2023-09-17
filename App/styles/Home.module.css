@@ -100,3 +100,8 @@
     flex-direction: column;
   }
 }
+
+.img-wrapper {
+  height: 50px;
+  width: auto;
+}
