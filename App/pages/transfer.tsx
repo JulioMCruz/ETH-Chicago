@@ -1,9 +1,28 @@
+import Image from "next/image";
+import Link from "next/link";
 
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
+import { Button } from "../components/ui/button";
+import { useAccount } from "wagmi";
+import { useState, useEffect } from 'react'
+
+import LoadFiat from '../components/LoadFiat';
+import BridgeUserToken from '../components/BridgeToken';
+
 const Transfers: NextPage = () => {
+
+  const { isConnected, address } = useAccount();
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -16,7 +35,67 @@ const Transfers: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1>Transfers</h1>
+
+      <div className="space-y-10 pb-4">
+          <section id="features" className="container space-y-6 bg-slate-50 py-4 dark:bg-transparent md:py-12 lg:py-12">
+            <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-2">
+
+              <div className="relative overflow-hidden rounded-lg border bg-background p-2">
+                <div className="flex h-[300px] flex-col justify-between rounded-md p-6 items-center">
+                  <div className="flex justify-center items-center">
+                    <Image
+                        src="/img/ChiCare-40.png"
+                        alt="Request"
+                        height={150} width={250}
+                        className="img-wrapper aspect-auto object-cover rounded-lg transition-all duration-300 hover:scale-105"
+                      />
+                  </div>
+                  <div className="space-y-2 items-center">
+                    <h1 className="font-bold text-3xl">Buy Currency</h1>
+                  </div>
+                  <div className="space-y-2 items-center">
+                    {(isClient && isConnected) && (
+                      <LoadFiat />
+                    )}
+                    {(isClient && !isConnected) && (
+                      <ConnectButton label="Join Us"/>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative overflow-hidden rounded-lg border bg-background p-2">
+                <div className="flex h-[300px] flex-col justify-between rounded-md p-6 items-center">
+                  <div className="flex justify-center items-center">
+                    <Image
+                        src="/img/ChiCare-40.png"
+                        alt="Request"
+                        height={150} width={250}
+                        className="img-wrapper aspect-auto object-cover rounded-lg transition-all duration-300 hover:scale-105"
+                      />
+                  </div>
+                  <div className="space-y-2 items-center">
+                    <h1 className="font-bold text-3xl">Bridge Currency</h1>
+                  </div>
+                  <div className="space-y-2 items-center">
+                  {(isClient && isConnected) && (
+                      <BridgeUserToken />
+                    )}
+                    {(isClient && !isConnected) && (
+                      <ConnectButton label="Join Us"/>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div className="mx-auto text-center md:max-w-[58rem]">
+              <p className="leading-normal text-muted-foreground sm:text-lg sm:leading-7">
+              Chi-Care streamlines the process of adding funds to our wallet using fiat or transfers from other networks, making it easier for you to support your friends, family, or community.
+              </p>
+            </div>
+          </section>
+        </div>
         
       </main>
 
