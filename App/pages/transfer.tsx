@@ -60,7 +60,7 @@ const TrasferList = [
   {
     title: "Requested: ARB 2000",
     text1: "Contact: Contact 03",
-    text2: "Message: I have a geta business idea. do you like invest?",
+    text2: "Message: I have a great business idea. Do you like invest?",
     dateText: "22 Sep 2023",
   },
 ];
