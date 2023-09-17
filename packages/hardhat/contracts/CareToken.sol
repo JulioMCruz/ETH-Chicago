@@ -15,10 +15,10 @@ contract CareToken is ERC20, Ownable {
     // A diverse group of assets that the people of Chicago, and others around the world, might need.
     // Currently supports US Dollar, MXN Peso, Aussie Dollar, and Indian Rupee.
     enum Currency {
-        USD,
-        MXN,
-        AUD,
-        INR
+        USD, // 0
+        MXN, // 1
+        AUD, // 2
+        INR  // 3
     }
 
     event RequestedTokens(uint256 amountInNativeCurrency, uint256 usdEquivalent, uint256 careTokenAmount, Currency indexed nativeCurrency, address indexed recipient);
@@ -54,6 +54,12 @@ contract CareToken is ERC20, Ownable {
         return uint224(value);
     }
 
+    /*
+    * Test Inputs:
+    * requestTokens(100, 0, recipientAddress): Given CARE is 1:1 with USD, should transfer 100 CARE tokens to recipient.
+    * requestTokens(100, 1, recipientAddress): Given 1 MXN = 0.059 USD, should transfer about 5.2 CARE tokens to recipient.
+    * requestTokens(100, 3, recipientAddress): Given 1 INR = 0.012 USD, should transfer 1.2 CARE tokens to recipient.
+    */
     // Converts the specified amount in a native currency to its USD equivalent and transfers the equivalent amount of CARE to the recipient
     function requestTokens(uint256 amountInNativeCurrency, Currency nativeCurrency, address recipient) external {
         require(amountInNativeCurrency > 0, "Requested amount should be greater than zero.");
