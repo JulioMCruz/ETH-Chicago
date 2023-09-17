@@ -56,7 +56,7 @@ const Header = () => {
               </SheetContent>
             </Sheet>
             <Link href="/" className="ml-4 lg:ml-0">
-              <h1 className="text-xl font-bold">FundSwift</h1>
+              <h1 className="text-xl font-bold">Chi-Care</h1>
             </Link>
           </div>
           <nav className="mx-6 flex items-center space-x-4 lg:space-x-6 hidden md:block">
@@ -84,7 +84,7 @@ const Header = () => {
               <Moon className="absolute h-6 w-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               <span className="sr-only">Toggle Theme</span>
             </Button>
-            <ConnectButton />
+            <ConnectButton label="Sign In"/>
 
             {(isClient && isConnected) && (
               <></>
