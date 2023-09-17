@@ -6,6 +6,7 @@ import styles from '../styles/Home.module.css';
 import { Button } from "../components/ui/button";
 import { useAccount } from "wagmi";
 import { useState, useEffect } from 'react'
+import LoadFiat from '../components/LoadFiat';
 
 
 const Home: NextPage = () => {
@@ -29,8 +30,8 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <div className="mt-8">
-          <Button>Click me</Button>
+        <div className="my-8">
+          <LoadFiat />
         </div>
         {(isClient && isConnected) && (
           <>
