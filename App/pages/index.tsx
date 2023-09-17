@@ -6,7 +6,11 @@ import styles from '../styles/Home.module.css';
 import { Button } from "../components/ui/button";
 import { useAccount } from "wagmi";
 import { useState, useEffect } from 'react'
+
+import WormholeBridge from '@wormhole-foundation/wormhole-connect';
+
 import LoadFiat from '../components/LoadFiat';
+import BridgeUserToken from '../components/BridgwToken';
 
 
 const Home: NextPage = () => {
@@ -36,6 +40,9 @@ const Home: NextPage = () => {
         {(isClient && isConnected) && (
           <>
           <p className="text-white">Address:  {address}</p>
+          <div className="my-4">
+            <BridgeUserToken />
+          </div>
           </>
         )}
 
