@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react'
 import WormholeBridge from '@wormhole-foundation/wormhole-connect';
 
 import LoadFiat from '../components/LoadFiat';
-import BridgeUserToken from '../components/BridgwToken';
+import BridgeUserToken from '../components/BridgeToken';
 
 
 const Home: NextPage = () => {
