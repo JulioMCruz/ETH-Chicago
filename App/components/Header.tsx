@@ -23,12 +23,12 @@ const Header = () => {
       label: "Home",
     },
     {
-      href: "/dashboard",
-      label: "Dashboard",
+      href: "/request",
+      label: "Request",
     },
     {
-      href: "/transfers",
-      label: "Transfers",
+      href: "/transfer",
+      label: "Transfer",
     },
   ];
 
