@@ -10,7 +10,7 @@ Chi Care is deployed on the Arbitrum Goerli Testnet.
 
 ## Contracts
 
-- **CARE Token:** [0xF21b70D211e00b3Cf5525Db103bf61E4f63D9bae](https://explorer.goerli.arbitrum.io/address/0xF21b70D211e00b3Cf5525Db103bf61E4f63D9bae)
+- **CARE Token:** [0x1d6032b5e4044d1F870D65f56C067d3D79CbE35d](https://goerli.arbiscan.io/address/0x1d6032b5e4044d1F870D65f56C067d3D79CbE35d)
 
 ## Faucet
 
@@ -20,7 +20,7 @@ Need test tokens? Use the [Arbitrum Goerli Testnet Faucet](https://faucet.quickn
 
 - **Multi-Currency Support:** Catering to the diverse community, Chi Care supports various currencies, ensuring inclusivity for users worldwide.
   
-- **Seamless Account Abstraction:** Users don't need to worry about complex crypto wallet setups. With our platform, a wallet is automatically created which they can access using familiar web2 methods such as email or social logins.
+- **Seamless Account Abstraction:** Users don't need to worry about complex crypto wallet setups. With our platform, a wallet is automatically created which they can access using familiar web2 methods such as email or social logins. Users can receive and donate hassle free!
 
 - **Gasless Transactions:** Our relayer ensures users don't have to fret over gas fees. We sponsor all transactions to make the process seamless.
 
